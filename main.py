@@ -95,7 +95,7 @@ def contact(shot, enemy):
 def end_menu():
     print(score)
 
-
+pygame.init()
 clock = pygame.time.Clock()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
@@ -105,6 +105,8 @@ plane_picture = pygame.image.load("nave1.png")
 enemy_picture = pygame.image.load("marciano.png")
 boom_picture = pygame.image.load("boom.png")
 
+fuente = pygame.font.Font(None, 30)
+texto = fuente.render("Score: ", 0, WHITE)
 
 plane_picture.set_colorkey(WHITE)
 enemy_picture.set_colorkey(WHITE)
@@ -177,6 +179,7 @@ while not game_over:
 
     # Dibujamos la posicion del jugador
     screen.blit(plane_picture, (player_one.get_position()[0], player_one.get_position()[1]))
+    screen.blit(texto, (100, 100))
     pygame.display.update()
 
 end_menu()
