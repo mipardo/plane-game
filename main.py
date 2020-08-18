@@ -204,7 +204,7 @@ def move_shot(shot):
 
 def contact(shot, enemy):
     if shot.get_position()[0] == enemy.get_position()[0] \
-            and enemy.get_position()[1] - shot.get_position()[1] in range (0, 20):
+            and enemy.get_position()[1] - shot.get_position()[1] in range (0, 41):
         return True
     else:
         return False
