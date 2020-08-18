@@ -1,8 +1,22 @@
+import pygame
+
+# CONSTANTES
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
+WHITE = (255, 255, 255)
+
+
 class Player:
     # Player position corresponde a las coordenadas del jugador: player_position[WIDTH, HEIGTH] [X,Y]
     def __init__(self, player_position):
+        self.picture = pygame.image.load("nave1.png")
+        self.picture.set_colorkey(WHITE)
         self.health = 100
         self.position = player_position
+
+    def get_picture(self):
+        return self.picture
 
     def get_position(self):
         return self.position
@@ -32,20 +46,10 @@ class Player:
     def move_down(self, distance):
         self.position[1] += distance
 
+    def revive(self):
+        self.health = 100
 
-class Explosion:
-    def __init__(self, position):
-        self.position = position
-        self.iterations = 0
 
-    def get_position(self):
-        return self.position
-
-    def get_iterations(self):
-        return self.iterations
-
-    def increase_iterations(self):
-        self.iterations += 1
 
 
 
