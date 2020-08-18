@@ -91,7 +91,7 @@ def run_game():
                 move_enemy(enemy)
             # Si ha llegado al final de la pantalla quitamos vida al jugador:
             elif enemy.get_position()[1] > SCREEN_HEIGTH:
-                player_one.set_damage(20)
+                player_one.set_damage(1)
                 enemies.remove(enemy)
             else:
                 enemies.remove(enemy)
@@ -110,14 +110,17 @@ def run_game():
             game_over = True
 
         # Dibujamos las vidas del jugador:
-        hearts = player_one.get_health() // 20
+        hearts = player_one.get_health()
         coordenada = 0
-        for i in range(0, 5):
+        for i in range(0, hearts +1):
             coordenada += 20
-            if i <= hearts:
-                screen.blit(heart_picture, (SCREEN_WIDTH - 20, coordenada))
-            else:
-                pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 20, coordenada -20, PLANE_SIZE, PLANE_SIZE))
+            screen.blit(heart_picture, (SCREEN_WIDTH - 20, coordenada))
+
+        for i in range(hearts, 6):
+            coordenada += 20
+            pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 20, coordenada - 20, PLANE_SIZE, PLANE_SIZE))
+
+
 
         # Dibujamos la posicion del jugador y los corazones:
         screen.blit(player_one.get_picture(), (player_one.get_position()[0], player_one.get_position()[1]))

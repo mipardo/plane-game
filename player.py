@@ -12,7 +12,7 @@ class Player:
     def __init__(self, player_position):
         self.picture = pygame.image.load("nave1.png")
         self.picture.set_colorkey(WHITE)
-        self.health = 100
+        self.health = 5
         self.position = player_position
 
     def get_picture(self):
@@ -47,7 +47,7 @@ class Player:
         self.position[1] += distance
 
     def revive(self):
-        self.health = 100
+        self.health = 5
 
 
 
