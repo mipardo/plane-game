@@ -15,12 +15,11 @@ BACKGROUNG_COLOR = BLACK
 SCREEN_WIDTH = 600
 SCREEN_HEIGTH = 600
 PLANE_SIZE = 40         # Ancho y alto del avion (JUGADOR Y  TODOS LOS TIPOS DE ENEMIGOS)
-PLANE_MOVEMENT = 20     # Numero de pixeles que se mueve el avion (el jugador)
+PLANE_MOVEMENT = 10     # Numero de pixeles que se mueve el avion (el jugador)
 
-# Definiendo posiciones y jugadores
+# Definiendo posicion y jugador
 
 PLAYER_ONE_POSITION = [SCREEN_WIDTH // 2, SCREEN_HEIGTH - 60]
-
 player_one = Player(PLAYER_ONE_POSITION)
 
 # Definiendo lista de disparos : Cada disparo se guardará en esta lista hasta que alcance su max distancia
@@ -29,6 +28,9 @@ shots = []
 enemies = []
 # Definiendo lista de explosiones
 explosions = []
+
+heart_picture = pygame.image.load("corazon.png")
+heart_picture.set_colorkey(WHITE)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
 screen.fill(BACKGROUNG_COLOR)
@@ -42,7 +44,6 @@ def run_game():
     screen.fill(BACKGROUNG_COLOR)
 
     score = 0
-
     game_over = False
 
     while not game_over:
@@ -79,8 +80,8 @@ def run_game():
                 if contact(shot, enemy):
                     score += 10
                     enemy.set_damage(shot.get_damage())
-                    pygame.draw.rect(screen, BACKGROUNG_COLOR, (shot.get_position()[0], shot.get_position()[1], 40, 40))
-                    create_explosion(enemy.get_position())
+                    pygame.draw.rect(screen, BACKGROUNG_COLOR, (enemy.get_position()[0], enemy.get_position()[1], 40, 40))
+                    create_explosion(shot.get_position())
                     shots.remove(shot)
 
         # Dibujamos los enemigos y hacemos que avancen:
@@ -108,7 +109,17 @@ def run_game():
         if player_one.get_health() <= 0:
             game_over = True
 
-        # Dibujamos la posicion del jugador
+        # Dibujamos las vidas del jugador:
+        hearts = player_one.get_health() // 20
+        coordenada = 0
+        for i in range(0, 5):
+            coordenada += 20
+            if i <= hearts:
+                screen.blit(heart_picture, (SCREEN_WIDTH - 20, coordenada))
+            else:
+                pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 20, coordenada -20, PLANE_SIZE, PLANE_SIZE))
+
+        # Dibujamos la posicion del jugador y los corazones:
         screen.blit(player_one.get_picture(), (player_one.get_position()[0], player_one.get_position()[1]))
         pygame.display.update()
 
@@ -192,7 +203,7 @@ def create_explosion(position):
 
 def move_enemy(enemy):
     pygame.draw.rect(screen, BACKGROUNG_COLOR, (enemy.get_position()[0], enemy.get_position()[1], PLANE_SIZE, PLANE_SIZE))
-    enemy.move_fordward(1)
+    enemy.move_fordward(5)
     screen.blit(enemy.get_picture(), (enemy.get_position()[0], enemy.get_position()[1]))
 
 
@@ -203,8 +214,8 @@ def move_shot(shot):
 
 
 def contact(shot, enemy):
-    if shot.get_position()[0] == enemy.get_position()[0] \
-            and enemy.get_position()[1] - shot.get_position()[1] in range (0, 41):
+    if shot.get_position()[0] + PLANE_SIZE//2 - enemy.get_position()[0] in range(0, PLANE_SIZE + 1) \
+            and enemy.get_position()[1] - shot.get_position()[1] in range (0, PLANE_SIZE + 1):
         return True
     else:
         return False

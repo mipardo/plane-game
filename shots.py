@@ -41,12 +41,12 @@ class Shot:
 
 class Double_shot:
     def __init__(self, starting_position):
-        self.picture = pygame.image.load("singleShot.png")
+        self.picture = pygame.image.load("doubleShot.png")
         self.picture.set_colorkey(WHITE)
         self.position = starting_position
         self.starting_position = starting_position
         self.distance_traveled = 0
-        self.damage = 100
+        self.damage = 200
 
     def get_picture(self):
         return self.picture
