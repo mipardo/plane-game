@@ -13,17 +13,6 @@ BACKGROUNG_COLOR = BLACK
 
 class Map:
     def __init__(self):
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
-        self.screen.fill(BACKGROUNG_COLOR)
-        for x in range(0, SCREEN_WIDTH):
-            for y in range(0, SCREEN_HEIGTH):
-                if random.randint(0,100) > 90:
-                    pygame.draw.rect(self.screen, WHITE, (x, y, 1, 1))
-
-
-
-
-
-
-
-
+        # self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
+        # self.screen.fill(BACKGROUNG_COLOR)
+        self.picture = pygame.image.load("pictures/fondo.png")

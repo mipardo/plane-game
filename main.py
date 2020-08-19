@@ -1,7 +1,7 @@
 import pygame
 import sys
-from enemies import Enemy1
-from shots import Shot
+from enemies import OctopusAlien
+from shots import DoubleShot
 from player import Player
 from efects import Explosion
 import random
@@ -29,7 +29,7 @@ enemies = []
 # Definiendo lista de explosiones
 explosions = []
 
-heart_picture = pygame.image.load("corazon.png")
+heart_picture = pygame.image.load("pictures/corazon.png")
 heart_picture.set_colorkey(WHITE)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
@@ -91,7 +91,7 @@ def run_game():
                 move_enemy(enemy)
             # Si ha llegado al final de la pantalla quitamos vida al jugador:
             elif enemy.get_position()[1] > SCREEN_HEIGTH:
-                player_one.set_damage(1)
+                player_one.set_damage(20)
                 enemies.remove(enemy)
             else:
                 enemies.remove(enemy)
@@ -109,17 +109,23 @@ def run_game():
         if player_one.get_health() <= 0:
             game_over = True
 
-        # Dibujamos las vidas del jugador:
-        hearts = player_one.get_health()
+
+        # Dibujamos las vidas del jugador y la puntuacion:
         coordenada = 0
-        for i in range(0, hearts +1):
+        fuente_score = pygame.font.Font(None, 30)
+        text_score = str(score)
+        text_score = fuente_score.render(text_score, 0, WHITE)
+        pygame.draw.rect(screen, BACKGROUNG_COLOR, (SCREEN_WIDTH - 45, coordenada, 40, 100))
+        screen.blit(text_score, (SCREEN_WIDTH - 45, coordenada))
+
+        hearts = player_one.get_health() // 20
+        for i in range(0, hearts + 1):
             coordenada += 20
             screen.blit(heart_picture, (SCREEN_WIDTH - 20, coordenada))
 
         for i in range(hearts, 6):
             coordenada += 20
             pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 20, coordenada - 20, PLANE_SIZE, PLANE_SIZE))
-
 
 
         # Dibujamos la posicion del jugador y los corazones:
@@ -131,6 +137,7 @@ def run_game():
 
 def end_menu(score):
     while True:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -187,14 +194,14 @@ def move_down(player):
 
 def create_enemy():
     ENEMY_RESPAWN = [(random.randint(0, SCREEN_WIDTH - PLANE_SIZE) // PLANE_MOVEMENT) * PLANE_MOVEMENT, 0]
-    enemy = Enemy1(ENEMY_RESPAWN.copy())
+    enemy = OctopusAlien(ENEMY_RESPAWN.copy())
     enemies.append(enemy)
 
 
 def create_shot(shot_position):
     # Modifico ligeramente la posicion para que dispare desde el pixel central al jugador
     shot_position_copied = shot_position.copy()
-    shot = Shot(shot_position_copied)
+    shot = DoubleShot(shot_position_copied)
     shots.append(shot)
 
 
@@ -218,7 +225,7 @@ def move_shot(shot):
 
 def contact(shot, enemy):
     if shot.get_position()[0] + PLANE_SIZE//2 - enemy.get_position()[0] in range(0, PLANE_SIZE + 1) \
-            and enemy.get_position()[1] - shot.get_position()[1] in range (0, PLANE_SIZE + 1):
+            and enemy.get_position()[1] - shot.get_position()[1] in range(0, PLANE_SIZE + 1):
         return True
     else:
         return False

@@ -10,7 +10,7 @@ WHITE = (255, 255, 255)
 class Explosion:
     def __init__(self, position):
         self.position = position
-        self.picture = pygame.image.load("boom.png")
+        self.picture = pygame.image.load("pictures/boom.png")
         self.picture.set_colorkey(WHITE)
         self.iterations = 0
 

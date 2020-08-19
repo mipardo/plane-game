@@ -10,9 +10,9 @@ WHITE = (255, 255, 255)
 class Player:
     # Player position corresponde a las coordenadas del jugador: player_position[WIDTH, HEIGTH] [X,Y]
     def __init__(self, player_position):
-        self.picture = pygame.image.load("nave1.png")
+        self.picture = pygame.image.load("pictures/nave1.png")
         self.picture.set_colorkey(WHITE)
-        self.health = 5
+        self.health = 100
         self.position = player_position
 
     def get_picture(self):
@@ -47,7 +47,7 @@ class Player:
         self.position[1] += distance
 
     def revive(self):
-        self.health = 5
+        self.health = 100
 
 
 
