@@ -81,7 +81,6 @@ def run_game():
                     score += 10
                     enemy.set_damage(shot.get_damage())
                     pygame.draw.rect(screen, BACKGROUNG_COLOR, (enemy.get_position()[0], enemy.get_position()[1], 40, 40))
-                    create_explosion(shot.get_position())
                     shots.remove(shot)
 
         # Dibujamos los enemigos y hacemos que avancen:
@@ -94,6 +93,7 @@ def run_game():
                 player.set_damage(20)
                 enemies.remove(enemy)
             else:
+                create_explosion(enemy.get_position())
                 enemies.remove(enemy)
 
         # Explosiones:
