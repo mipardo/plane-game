@@ -67,7 +67,7 @@ def run_game():
 
         # Creamos los enemigos aleatoriamente:
         if random.randint(0, 1000) >= 980:
-            create_enemy()
+            create_enemy(score)
 
         for shot in shots:
             if shot.get_max_distance() > shot.get_distance_traveled():
@@ -80,7 +80,7 @@ def run_game():
                 if contact(shot, enemy):
                     score += 10
                     enemy.set_damage(shot.get_damage())
-                    pygame.draw.rect(screen, BACKGROUNG_COLOR, (enemy.get_position()[0], enemy.get_position()[1], 40, 40))
+                    pygame.draw.rect(screen, BACKGROUNG_COLOR, (shot.get_position()[0], shot.get_position()[1], 40, 40))
                     shots.remove(shot)
 
         # Dibujamos los enemigos y hacemos que avancen:
@@ -168,7 +168,7 @@ def start_over():
     enemies.clear()
     explosions.clear()
     player.revive()
-    player.move(SCREEN_WIDTH // 2, SCREEN_HEIGTH - 60)
+    player.move([SCREEN_WIDTH // 2, SCREEN_HEIGTH - 60])
     run_game()
 
 
@@ -192,9 +192,18 @@ def move_down(player):
     player.move_down(PLANE_MOVEMENT)
 
 
-def create_enemy():
+def create_enemy(score):
     ENEMY_RESPAWN = [(random.randint(0, SCREEN_WIDTH - PLANE_SIZE) // PLANE_MOVEMENT) * PLANE_MOVEMENT, 0]
-    enemy = OctopusAlien(ENEMY_RESPAWN.copy())
+    if score < 10:
+        enemy = OctopusAlien(ENEMY_RESPAWN.copy())
+    elif score < 20:
+        enemy = ClassicAlien(ENEMY_RESPAWN.copy())
+    elif score < 30:
+        enemy = ClassicAlien2(ENEMY_RESPAWN.copy())
+    elif score < 40:
+        enemy = AlienShip(ENEMY_RESPAWN.copy())
+    else:
+        enemy = AlienShip2(ENEMY_RESPAWN.copy())
     enemies.append(enemy)
 
 

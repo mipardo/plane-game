@@ -47,7 +47,7 @@ class SingleShot(Shot):
 
 class LongShot(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 20)
+        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 30)
 
 
 class DoubleShot(Shot):
@@ -62,5 +62,5 @@ class TripleShot(Shot):
 
 class Missile(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/misil.png", 200, 40)
+        Shot.__init__(self, starting_position, "pictures/misil.png", 300, 40)
 
