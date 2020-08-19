@@ -1,7 +1,7 @@
 import pygame
 import sys
-from enemies import OctopusAlien
-from shots import DoubleShot
+from enemies import OctopusAlien, AlienShip, AlienShip2, ClassicAlien, ClassicAlien2
+from shots import SingleShot, Missile, DoubleShot, LongShot, TripleShot
 from player import Player
 from efects import Explosion
 import random
@@ -20,7 +20,7 @@ PLANE_MOVEMENT = 10     # Numero de pixeles que se mueve el avion (el jugador)
 # Definiendo posicion y jugador
 
 PLAYER_ONE_POSITION = [SCREEN_WIDTH // 2, SCREEN_HEIGTH - 60]
-player_one = Player(PLAYER_ONE_POSITION)
+player = Player(PLAYER_ONE_POSITION)
 
 # Definiendo lista de disparos : Cada disparo se guardará en esta lista hasta que alcance su max distancia
 shots = []
@@ -53,24 +53,24 @@ def run_game():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and player_one.get_position()[0] >= PLANE_MOVEMENT:
-                    move_left(player_one)
-                elif event.key == pygame.K_RIGHT and player_one.get_position()[0] < SCREEN_WIDTH - PLANE_MOVEMENT:
-                    move_right(player_one)
-                elif event.key == pygame.K_UP and player_one.get_position()[1] >= PLANE_MOVEMENT:
-                    move_up(player_one)
-                elif event.key == pygame.K_DOWN and player_one.get_position()[1] < SCREEN_HEIGTH - PLANE_MOVEMENT:
-                    move_down(player_one)
+                if event.key == pygame.K_LEFT and player.get_position()[0] >= PLANE_MOVEMENT:
+                    move_left(player)
+                elif event.key == pygame.K_RIGHT and player.get_position()[0] < SCREEN_WIDTH - PLANE_MOVEMENT:
+                    move_right(player)
+                elif event.key == pygame.K_UP and player.get_position()[1] >= PLANE_MOVEMENT:
+                    move_up(player)
+                elif event.key == pygame.K_DOWN and player.get_position()[1] < SCREEN_HEIGTH - PLANE_MOVEMENT:
+                    move_down(player)
                 elif event.key == pygame.K_SPACE:
                     score -= 1
-                    create_shot(player_one.get_position())
+                    create_shot(player.get_position(), score)
 
         # Creamos los enemigos aleatoriamente:
         if random.randint(0, 1000) >= 980:
             create_enemy()
 
         for shot in shots:
-            if shot.get_distance_traveled() < 10:
+            if shot.get_max_distance() > shot.get_distance_traveled():
                 move_shot(shot)
             else:
                 pygame.draw.rect(screen, BACKGROUNG_COLOR, (shot.get_position()[0], shot.get_position()[1], 40, 40))
@@ -91,7 +91,7 @@ def run_game():
                 move_enemy(enemy)
             # Si ha llegado al final de la pantalla quitamos vida al jugador:
             elif enemy.get_position()[1] > SCREEN_HEIGTH:
-                player_one.set_damage(20)
+                player.set_damage(20)
                 enemies.remove(enemy)
             else:
                 enemies.remove(enemy)
@@ -106,7 +106,7 @@ def run_game():
                 explosion.increase_iterations()
 
         # Comprobamos si ha acabado el juego:
-        if player_one.get_health() <= 0:
+        if player.get_health() <= 0:
             game_over = True
 
 
@@ -118,7 +118,7 @@ def run_game():
         pygame.draw.rect(screen, BACKGROUNG_COLOR, (SCREEN_WIDTH - 45, coordenada, 40, 100))
         screen.blit(text_score, (SCREEN_WIDTH - 45, coordenada))
 
-        hearts = player_one.get_health() // 20
+        hearts = player.get_health() // 20
         for i in range(0, hearts + 1):
             coordenada += 20
             screen.blit(heart_picture, (SCREEN_WIDTH - 20, coordenada))
@@ -129,7 +129,7 @@ def run_game():
 
 
         # Dibujamos la posicion del jugador y los corazones:
-        screen.blit(player_one.get_picture(), (player_one.get_position()[0], player_one.get_position()[1]))
+        screen.blit(player.get_picture(), (player.get_position()[0], player.get_position()[1]))
         pygame.display.update()
 
     end_menu(score)
@@ -167,8 +167,8 @@ def start_over():
     shots.clear()
     enemies.clear()
     explosions.clear()
-    player_one.revive()
-    player_one.move(PLAYER_ONE_POSITION)
+    player.revive()
+    player.move(SCREEN_WIDTH // 2, SCREEN_HEIGTH - 60)
     run_game()
 
 
@@ -198,10 +198,19 @@ def create_enemy():
     enemies.append(enemy)
 
 
-def create_shot(shot_position):
+def create_shot(shot_position, score):
     # Modifico ligeramente la posicion para que dispare desde el pixel central al jugador
     shot_position_copied = shot_position.copy()
-    shot = DoubleShot(shot_position_copied)
+    if score < 20:
+        shot = SingleShot(shot_position_copied)
+    elif score < 40:
+        shot = LongShot(shot_position_copied)
+    elif score < 60:
+        shot = DoubleShot(shot_position_copied)
+    elif score < 80:
+        shot = TripleShot(shot_position_copied)
+    else:
+        shot = Missile(shot_position_copied)
     shots.append(shot)
 
 
@@ -224,7 +233,7 @@ def move_shot(shot):
 
 
 def contact(shot, enemy):
-    if shot.get_position()[0] + PLANE_SIZE//2 - enemy.get_position()[0] in range(0, PLANE_SIZE + 1) \
+    if shot.get_position()[0] - enemy.get_position()[0] in range(0, PLANE_SIZE + 1) \
             and enemy.get_position()[1] - shot.get_position()[1] in range(0, PLANE_SIZE + 1):
         return True
     else:

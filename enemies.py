@@ -8,11 +8,11 @@ WHITE = (255, 255, 255)
 
 
 class Enemy(object):
-    def __init__(self, enemy_position, picture):
+    def __init__(self, enemy_position, picture, health):
         self.position = enemy_position
         self.picture = pygame.image.load(picture)
         self.picture.set_colorkey(WHITE)
-        self.health = 100
+        self.health = health
 
     def get_picture(self):
         return self.picture
@@ -32,25 +32,25 @@ class Enemy(object):
 
 class OctopusAlien(Enemy):
     def __init__(self, enemy_position):
-        Enemy.__init__(self, enemy_position, "pictures/marciano.png")
+        Enemy.__init__(self, enemy_position, "pictures/marciano.png", 100)
 
 
 class ClassicAlien(Enemy):
     def __init__(self,enemy_position):
-        Enemy.__init__(self, enemy_position, "pictures/alienClasico.png")
+        Enemy.__init__(self, enemy_position, "pictures/alienClasico.png", 100)
 
 
 class ClassicAlien2(Enemy):
     def __init__(self, enemy_position):
-        Enemy.__init__(self, enemy_position, "pictures/alienClasico2.png")
+        Enemy.__init__(self, enemy_position, "pictures/alienClasico2.png", 100)
 
 
 class AlienShip(Enemy):
     def __init__(self, enemy_position):
-        Enemy.__init__(self, enemy_position, "pictures/naveMarciana.png")
+        Enemy.__init__(self, enemy_position, "pictures/naveMarciana.png", 200)
 
 
 class AlienShip2(Enemy):
     def __init__(self, enemy_position):
-        Enemy.__init__(self, enemy_position, "pictures/naveMarciana2.png")
+        Enemy.__init__(self, enemy_position, "pictures/naveMarciana2.png", 500)
 

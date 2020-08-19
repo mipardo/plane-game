@@ -8,12 +8,13 @@ WHITE = (255, 255, 255)
 
 
 class Shot(object):
-    def __init__(self, starting_position, picture, damage):
+    def __init__(self, starting_position, picture, damage, max_distance):
         self.position = starting_position
         self.starting_position = starting_position
         self.picture = pygame.image.load(picture)
         self.picture.set_colorkey(WHITE)
         self.distance_traveled = 0
+        self.max_distance = max_distance
         self.damage = damage
 
     def get_picture(self):
@@ -31,6 +32,9 @@ class Shot(object):
     def get_damage(self):
         return self.damage
 
+    def get_max_distance(self):
+        return self.max_distance
+
     def move_forward(self, distance):
         self.position[1] -= distance
         self.distance_traveled += 1
@@ -38,14 +42,25 @@ class Shot(object):
 
 class SingleShot(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50)
+        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 10)
+
+
+class LongShot(Shot):
+    def __init__(self, starting_position):
+        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 20)
 
 
 class DoubleShot(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/doubleShot.png", 100)
+        Shot.__init__(self, starting_position, "pictures/doubleShot.png", 100, 20)
+
+
+class TripleShot(Shot):
+    def __init__(self, starting_position):
+        Shot.__init__(self,starting_position, "pictures/tripleShot.png", 150, 20)
 
 
 class Missile(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/misil.png")
+        Shot.__init__(self, starting_position, "pictures/misil.png", 200, 40)
+
