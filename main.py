@@ -34,7 +34,6 @@ heart_picture = pygame.image.load("pictures/corazon.png")
 heart_picture.set_colorkey(WHITE)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
-screen.fill(BACKGROUNG_COLOR)
 
 
 def run_game():
@@ -89,7 +88,7 @@ def run_game():
         for enemy in enemies:
             # Comprobamos que tenga vida y que siga dentro de la pantalla
             if enemy.get_health() > 0 and enemy.get_position()[1] <= SCREEN_HEIGTH:
-                move_enemy(enemy)
+                move_enemy(enemy, score)
             # Si ha llegado al final de la pantalla quitamos vida al jugador:
             elif enemy.get_position()[1] > SCREEN_HEIGTH:
                 player.set_damage(20)
@@ -187,13 +186,13 @@ def create_enemy(score):
 def create_shot(shot_position, score):
     # Modifico ligeramente la posicion para que dispare desde el pixel central al jugador
     shot_position_copied = shot_position.copy()
-    if score < 20:
+    if score < 50:
         shot = SingleShot(shot_position_copied)
-    elif score < 40:
+    elif score < 150:
         shot = LongShot(shot_position_copied)
-    elif score < 60:
+    elif score < 250:
         shot = DoubleShot(shot_position_copied)
-    elif score < 80:
+    elif score < 350:
         shot = TripleShot(shot_position_copied)
     else:
         shot = Missile(shot_position_copied)
@@ -206,8 +205,11 @@ def create_explosion(position):
     screen.blit(explosion.get_picture(), (explosion.get_position()[0], explosion.get_position()[1]))
 
 
-def move_enemy(enemy):
-    enemy.move_fordward(5)
+def move_enemy(enemy, score):
+    if score > 0:
+        enemy.move_fordward((score // 100) + 1)
+    else:
+        enemy.move_fordward(1)
     screen.blit(enemy.get_picture(), (enemy.get_position()[0], enemy.get_position()[1]))
 
 
