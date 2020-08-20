@@ -4,6 +4,7 @@ from enemies import OctopusAlien, AlienShip, AlienShip2, ClassicAlien, ClassicAl
 from shots import SingleShot, Missile, DoubleShot, LongShot, TripleShot
 from player import Player
 from efects import Explosion
+from map import Map
 import random
 
 # CONSTANTES
@@ -38,29 +39,32 @@ screen.fill(BACKGROUNG_COLOR)
 
 def run_game():
     pygame.init()
+    pygame.key.set_repeat(1, 25)
+
     clock = pygame.time.Clock()
 
+    fondo = Map()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
-    screen.fill(BACKGROUNG_COLOR)
 
     score = 0
     game_over = False
 
     while not game_over:
         # Control de fps:
-        clock.tick(10)
+        clock.tick(15)
+        screen.blit(fondo.get_picture(), [0, 0])
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT and player.get_position()[0] >= PLANE_MOVEMENT:
-                    move_left(player)
+                    player.move_left(PLANE_MOVEMENT)
                 elif event.key == pygame.K_RIGHT and player.get_position()[0] < SCREEN_WIDTH - PLANE_MOVEMENT:
-                    move_right(player)
+                    player.move_right(PLANE_MOVEMENT)
                 elif event.key == pygame.K_UP and player.get_position()[1] >= PLANE_MOVEMENT:
-                    move_up(player)
+                    player.move_up(PLANE_MOVEMENT)
                 elif event.key == pygame.K_DOWN and player.get_position()[1] < SCREEN_HEIGTH - PLANE_MOVEMENT:
-                    move_down(player)
+                    player.move_down(PLANE_MOVEMENT)
                 elif event.key == pygame.K_SPACE:
                     score -= 1
                     create_shot(player.get_position(), score)
@@ -73,14 +77,12 @@ def run_game():
             if shot.get_max_distance() > shot.get_distance_traveled():
                 move_shot(shot)
             else:
-                pygame.draw.rect(screen, BACKGROUNG_COLOR, (shot.get_position()[0], shot.get_position()[1], 40, 40))
                 shots.remove(shot)
             # Comprobamos si hay contacto con algun enemigo:
             for enemy in enemies:
                 if contact(shot, enemy):
                     score += 10
                     enemy.set_damage(shot.get_damage())
-                    pygame.draw.rect(screen, BACKGROUNG_COLOR, (shot.get_position()[0], shot.get_position()[1], 40, 40))
                     shots.remove(shot)
 
         # Dibujamos los enemigos y hacemos que avancen:
@@ -99,8 +101,6 @@ def run_game():
         # Explosiones:
         for explosion in explosions:
             if explosion.get_iterations() >= 2:
-                pygame.draw.rect(screen, BACKGROUNG_COLOR,
-                                 (explosion.get_position()[0], explosion.get_position()[1], PLANE_SIZE, PLANE_SIZE))
                 explosions.remove(explosion)
             else:
                 explosion.increase_iterations()
@@ -115,18 +115,15 @@ def run_game():
         fuente_score = pygame.font.Font(None, 30)
         text_score = str(score)
         text_score = fuente_score.render(text_score, 0, WHITE)
-        pygame.draw.rect(screen, BACKGROUNG_COLOR, (SCREEN_WIDTH - 45, coordenada, 40, 100))
         screen.blit(text_score, (SCREEN_WIDTH - 45, coordenada))
 
         hearts = player.get_health() // 20
-        for i in range(0, hearts + 1):
+        for i in range(0, hearts):
             coordenada += 20
             screen.blit(heart_picture, (SCREEN_WIDTH - 20, coordenada))
 
-        for i in range(hearts, 6):
+        for i in range(hearts, 5):
             coordenada += 20
-            pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 20, coordenada - 20, PLANE_SIZE, PLANE_SIZE))
-
 
         # Dibujamos la posicion del jugador y los corazones:
         screen.blit(player.get_picture(), (player.get_position()[0], player.get_position()[1]))
@@ -172,35 +169,15 @@ def start_over():
     run_game()
 
 
-def move_left(player):
-    pygame.draw.rect(screen, BACKGROUNG_COLOR, (player.get_position()[0], player.get_position()[1], PLANE_SIZE, PLANE_SIZE))
-    player.move_left(PLANE_MOVEMENT)
-
-
-def move_right(player):
-    pygame.draw.rect(screen, BACKGROUNG_COLOR, (player.get_position()[0], player.get_position()[1], PLANE_SIZE, PLANE_SIZE))
-    player.move_right(PLANE_MOVEMENT)
-
-
-def move_up(player):
-    pygame.draw.rect(screen, BACKGROUNG_COLOR, (player.get_position()[0], player.get_position()[1], PLANE_SIZE, PLANE_SIZE))
-    player.move_up(PLANE_MOVEMENT)
-
-
-def move_down(player):
-    pygame.draw.rect(screen, BACKGROUNG_COLOR, (player.get_position()[0], player.get_position()[1], PLANE_SIZE, PLANE_SIZE))
-    player.move_down(PLANE_MOVEMENT)
-
-
 def create_enemy(score):
     ENEMY_RESPAWN = [(random.randint(0, SCREEN_WIDTH - PLANE_SIZE) // PLANE_MOVEMENT) * PLANE_MOVEMENT, 0]
-    if score < 10:
+    if score < 100:
         enemy = OctopusAlien(ENEMY_RESPAWN.copy())
-    elif score < 20:
+    elif score < 200:
         enemy = ClassicAlien(ENEMY_RESPAWN.copy())
-    elif score < 30:
+    elif score < 300:
         enemy = ClassicAlien2(ENEMY_RESPAWN.copy())
-    elif score < 40:
+    elif score < 400:
         enemy = AlienShip(ENEMY_RESPAWN.copy())
     else:
         enemy = AlienShip2(ENEMY_RESPAWN.copy())
@@ -230,13 +207,11 @@ def create_explosion(position):
 
 
 def move_enemy(enemy):
-    pygame.draw.rect(screen, BACKGROUNG_COLOR, (enemy.get_position()[0], enemy.get_position()[1], PLANE_SIZE, PLANE_SIZE))
     enemy.move_fordward(5)
     screen.blit(enemy.get_picture(), (enemy.get_position()[0], enemy.get_position()[1]))
 
 
 def move_shot(shot):
-    pygame.draw.rect(screen, BACKGROUNG_COLOR, (shot.get_position()[0], shot.get_position()[1], 40, 40))
     shot.move_forward(20)
     screen.blit(shot.get_picture(), (shot.get_position()[0], shot.get_position()[1]))
 

@@ -25,3 +25,11 @@ class Explosion:
 
     def increase_iterations(self):
         self.iterations += 1
+
+
+class LevelUp:
+
+    def __init__(self, position):
+        self.position = position
+        self.picture = pygame.image.load("pictures/.png")
+        self.picture.set_colorkey(WHITE)

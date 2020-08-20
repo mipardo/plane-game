@@ -13,6 +13,7 @@ BACKGROUNG_COLOR = BLACK
 
 class Map:
     def __init__(self):
-        # self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
-        # self.screen.fill(BACKGROUNG_COLOR)
         self.picture = pygame.image.load("pictures/fondo.png")
+
+    def get_picture(self):
+        return self.picture
