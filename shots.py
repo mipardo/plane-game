@@ -8,7 +8,7 @@ WHITE = (255, 255, 255)
 
 
 class Shot(object):
-    def __init__(self, starting_position, picture, damage, max_distance):
+    def __init__(self, starting_position, picture, damage, max_distance, sound):
         self.position = starting_position
         self.starting_position = starting_position
         self.picture = pygame.image.load(picture)
@@ -16,9 +16,13 @@ class Shot(object):
         self.distance_traveled = 0
         self.max_distance = max_distance
         self.damage = damage
+        self.sound = pygame.mixer.Sound(sound)
 
     def get_picture(self):
         return self.picture
+
+    def play_sound(self):
+        self.sound.play()
 
     def get_distance_traveled(self):
         return self.distance_traveled
@@ -42,25 +46,25 @@ class Shot(object):
 
 class SingleShot(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 10)
+        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 10, "sounds/shot.ogg")
 
 
 class LongShot(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 30)
+        Shot.__init__(self, starting_position, "pictures/singleShot.png", 50, 30, "sounds/shot.ogg")
 
 
 class DoubleShot(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/doubleShot.png", 100, 20)
+        Shot.__init__(self, starting_position, "pictures/doubleShot.png", 100, 20, "sounds/shot.ogg")
 
 
 class TripleShot(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self,starting_position, "pictures/tripleShot.png", 150, 20)
+        Shot.__init__(self,starting_position, "pictures/tripleShot.png", 150, 20, "sounds/tripleShot.ogg")
 
 
 class Missile(Shot):
     def __init__(self, starting_position):
-        Shot.__init__(self, starting_position, "pictures/misil.png", 300, 40)
+        Shot.__init__(self, starting_position, "pictures/misil.png", 300, 40, "sounds/shot.ogg")
 

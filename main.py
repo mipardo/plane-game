@@ -7,6 +7,7 @@ from efects import Explosion
 from map import Map
 import random
 
+
 # CONSTANTES
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
@@ -30,20 +31,22 @@ enemies = []
 # Definiendo lista de explosiones
 explosions = []
 
-heart_picture = pygame.image.load("pictures/corazon.png")
-heart_picture.set_colorkey(WHITE)
+
+pygame.init()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
 
+pygame.mixer.music.load("sounds/backgroundMusic.mp3")
+pygame.mixer.music.play()
+
+heart_picture = pygame.image.load("pictures/corazon.png")
+heart_picture.set_colorkey(WHITE)
+
 
 def run_game():
-    pygame.init()
     pygame.key.set_repeat(1, 25)
-
     clock = pygame.time.Clock()
-
-    fondo = Map()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGTH))
+    background = Map()
 
     score = 0
     game_over = False
@@ -51,7 +54,7 @@ def run_game():
     while not game_over:
         # Control de fps:
         clock.tick(15)
-        screen.blit(fondo.get_picture(), [0, 0])
+        screen.blit(background.get_picture(), [0, 0])
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -67,6 +70,7 @@ def run_game():
                 elif event.key == pygame.K_SPACE:
                     score -= 1
                     create_shot(player.get_position(), score)
+
 
         # Creamos los enemigos aleatoriamente:
         if random.randint(0, 1000) >= 980:
@@ -196,6 +200,8 @@ def create_shot(shot_position, score):
         shot = TripleShot(shot_position_copied)
     else:
         shot = Missile(shot_position_copied)
+
+    shot.play_sound()
     shots.append(shot)
 
 
@@ -203,6 +209,7 @@ def create_explosion(position):
     explosion = Explosion(position)
     explosions.append(explosion)
     screen.blit(explosion.get_picture(), (explosion.get_position()[0], explosion.get_position()[1]))
+    explosion.play_sound()
 
 
 def move_enemy(enemy, score):
@@ -219,7 +226,7 @@ def move_shot(shot):
 
 
 def contact(shot, enemy):
-    if shot.get_position()[0] - enemy.get_position()[0] in range(0, PLANE_SIZE + 1) \
+    if shot.get_position()[0] - enemy.get_position()[0] in range(- (PLANE_SIZE // 2) + 2, (PLANE_SIZE // 2) - 2) \
             and enemy.get_position()[1] - shot.get_position()[1] in range(0, PLANE_SIZE + 1):
         return True
     else:

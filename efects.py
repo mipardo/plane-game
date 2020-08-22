@@ -13,12 +13,17 @@ class Explosion:
         self.picture = pygame.image.load("pictures/boom.png")
         self.picture.set_colorkey(WHITE)
         self.iterations = 0
+        self.sound = pygame.mixer.Sound("sounds/explosion.ogg")
+
 
     def get_picture(self):
         return self.picture
 
     def get_position(self):
         return self.position
+
+    def play_sound(self):
+        self.sound.play()
 
     def get_iterations(self):
         return self.iterations
